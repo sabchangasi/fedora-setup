@@ -1,16 +1,9 @@
 #!/bin/bash
 # ===================================================================================
-# Fedora to macOS Ultimate Transformation & Optimization Script v5 (Final Automated)
+# Fedora to macOS Ultimate Transformation & Optimization Script v6 (The Fix)
 #
-# This script is focused on two goals:
-#   1. A perfect, zero-touch WhiteSur macOS visual theme setup.
-#   2. Maximum battery life through automated, aggressive power tuning.
-#
-# It automates EVERYTHING:
-#   - Installation of the WhiteSur theme suite and macOS fonts.
-#   - Installation and configuration of essential GNOME extensions.
-#   - Installation of core features like "Quick Look" and "Spotlight".
-#   - Aggressive performance and battery life tuning with TLP (no manual edits).
+# This version fixes installation errors caused by upstream changes to the
+# cursor theme and a typo in the font installation path.
 #
 # Compatible with Fedora 40+
 # Run with: ./fedora_macos_ultimate.sh
@@ -74,14 +67,16 @@ install_themes_and_fonts() {
     git clone https://github.com/vinceliuice/WhiteSur-icon-theme.git --depth=1
     ./WhiteSur-icon-theme/install.sh -a
 
-    print_step "Installing McMojave Cursor Theme..."
+    print_step "Installing McMojave Cursor Theme (Reliable Method)..."
     git clone https://github.com/vinceliuice/McMojave-cursors.git --depth=1
-    ./McMojave-cursors/install.sh
+    mkdir -p ~/.icons # Ensure the local icons directory exists
+    cp -r McMojave-cursors/dist/McMojave-cursors ~/.icons/
     
     print_step "Installing SF Pro Fonts..."
     git clone https://github.com/sahibjotsaggu/San-Francisco-Pro-Fonts.git --depth=1
     mkdir -p ~/.local/share/fonts
-    find SF-Fonts -name "*.otf" -exec cp {} ~/.local/share/fonts/ \;
+    # --- FIXED --- Using the correct folder name here
+    find San-Francisco-Pro-Fonts -name "*.otf" -exec cp {} ~/.local/share/fonts/ \;
     fc-cache -f -v
 }
 
@@ -214,3 +209,4 @@ main() {
 }
 
 main
+
